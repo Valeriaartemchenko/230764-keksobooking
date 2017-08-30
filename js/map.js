@@ -5,6 +5,8 @@ var HEADINGS = ['Большая уютная квартира', 'Маленьк�
 var TYPES = ['flat', 'house', 'bungalo'];
 var CHECKIN_CHECKOUT_TIMES = [12.00, 13.00, 14.00];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var POINTER_WIDTH = 56;
+var POINTER_HEIGHT = 75;
 
 var MIN_PRICE = 1000;
 var MAX_PRICE = 1000000;
@@ -55,4 +57,16 @@ var advertObject = {
     'x': getValueFromRange(300, 900),
     'y': getValueFromRange(100, 500)
   }
+};
+var generatePointer = function (advertObject) {
+  var pointer = document.createElement('div');
+  pointer.classList.add('pin');
+  pointer.style.left = (advertObject.location.x + 0.5 * POINTER_WIDTH) + 'px';
+  pointer.style.top = (advertObject.location.y + POINTER_HEIGHT) + 'px';
+  var pointerImage = document.createElement('img');
+  pointerImage.classList.add('rounded');
+  pointerImage.style.height = '40px';
+  pointerImage.style.width = '40px';
+  pointer.appendChild(pointerImage);
+  return pointer;
 };
