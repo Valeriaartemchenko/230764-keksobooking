@@ -71,6 +71,7 @@ var generatePointer = function (advertObject) {
   pointer.style.left = (advertObject.location.x + 0.5 * POINTER_WIDTH) + 'px';
   pointer.style.top = (advertObject.location.y + POINTER_HEIGHT) + 'px';
   var pointerImage = document.createElement('img');
+  pointerImage.src = advertObject.author.avatar;
   pointerImage.classList.add('rounded');
   pointerImage.style.height = '40px';
   pointerImage.style.width = '40px';
