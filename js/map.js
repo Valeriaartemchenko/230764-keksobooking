@@ -56,13 +56,13 @@ var defineAdvertObject = function () {
       'features': generateFeatures(),
       'description': '',
       'photos': []
-
     },
     'location': {
       'x': getValueFromRange(300, 900),
       'y': getValueFromRange(100, 500)
     }
   };
+  return advertObject;
 };
 
 var generatePointer = function (advertObject) {
