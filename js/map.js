@@ -11,6 +11,7 @@ var pointsFragment = document.createDocumentFragment();
 var TokyoPinMap = document.querySelector('.tokyo__pin-map');
 var NUMBER_OF_ADS = 8;
 var ads = [];
+var lodgeTemplate = document.querySelector('#lodge_template');
 
 var MIN_PRICE = 1000;
 var MAX_PRICE = 1000000;
@@ -85,3 +86,39 @@ for (var i = 0; i < NUMBER_OF_ADS; i++) {
 }
 
 TokyoPinMap.appendChild(pointsFragment);
+
+var createFeatureElement = function (feature) {
+  var newFeatureElement = document.createElement('span');
+  newFeatureElement.classList.add('feature__image');
+  newFeatureElement.classList.add('feature__image--' + feature);
+  return newFeatureElement;
+}
+
+var createNewDialogPanel = function (offerObj) {
+  var dialogOffer = lodgeTemplate.content.cloneNode(true);
+  var dialogTitle = dialogOffer.querySelector('.lodge__title');
+  var dialogAddress = dialogOffer.querySelector('.lodge__address');
+  var dialogPrice = dialogOffer .querySelector('.lodge__price');
+  var dialogType = dialogOffer.querySelector('.lodge__type');
+  var dialogRoomGuests = dialogOffer.querySelector('.longe__rooms-and-guests');
+  var dialogCheckinTime = dialogOffer.querySelector('.lodge__checkin-time');
+  var dialogFeatures = dialogOffer.querySelector('.lodge__features');
+  var dialogDecription = dialogOffer.querySelector('.lodge__description');
+  dialogTitle.textContent = offerObj.offer.title;
+  dialogAddress.textContent = offerObj.offer.address;
+  dialogPrice.textContent = offerObj.offer.price + '&#x20bd;/ночь';
+  dialogRoomGuests.textContent = 'Для' + offerObj.offer.guests + 'гостей в' + offerObj.offer.rooms + 'комнатах';
+  dialogCheckinTime.textContent = 'Заезд после' + offerObj.offer.checkin + ', выезд до' + offerObj.offer.checkout;
+  dialogDecription.textContent = offerObj.offer.description;
+
+  switch (offerObj.offer.type) {
+    case 'flat': dialogType.textContent = 'Квартира';
+      break;
+    case 'house': dialogType.textContent = 'Дом';
+      break;
+    case 'bungalo': dialogType.textContent = 'Бунгало';
+      break;
+  }
+};
+
+
