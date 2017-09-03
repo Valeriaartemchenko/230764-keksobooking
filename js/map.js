@@ -10,8 +10,10 @@ var POINTER_HEIGHT = 75;
 var pointsFragment = document.createDocumentFragment();
 var TokyoPinMap = document.querySelector('.tokyo__pin-map');
 var NUMBER_OF_ADS = 8;
-var ads = [];
-var lodgeTemplate = document.querySelector('#lodge_template');
+var lodgeTemplate = document.querySelector('#lodge-template').content;
+var panelTitle = document.querySelector('.dialog__title');
+var oldDialogPanel = document.querySelector('.dialog__panel');
+var dialogPanelParent = oldDialogPanel.parentNode;
 
 var MIN_PRICE = 1000;
 var MAX_PRICE = 1000000;
@@ -81,6 +83,7 @@ var generatePointer = function (advertObject) {
 };
 
 for (var i = 0; i < NUMBER_OF_ADS; i++) {
+  var ads = [];
   ads[i] = defineAdvertObject();
   pointsFragment.appendChild(generatePointer(ads[i]));
 }
@@ -92,10 +95,11 @@ var createFeatureElement = function (feature) {
   newFeatureElement.classList.add('feature__image');
   newFeatureElement.classList.add('feature__image--' + feature);
   return newFeatureElement;
-}
+};
 
 var createNewDialogPanel = function (offerObj) {
-  var dialogOffer = lodgeTemplate.content.cloneNode(true);
+  var dialogOffer = lodgeTemplate.cloneNode(true);
+  var newDialogPanel = dialogOffer.querySelector('.lodge__panel');
   var dialogTitle = dialogOffer.querySelector('.lodge__title');
   var dialogAddress = dialogOffer.querySelector('.lodge__address');
   var dialogPrice = dialogOffer .querySelector('.lodge__price');
@@ -119,6 +123,18 @@ var createNewDialogPanel = function (offerObj) {
     case 'bungalo': dialogType.textContent = 'Бунгало';
       break;
   }
+
+  for (i = 0; i < offerObj.offer.features.length; i++) {
+    dialogFeatures.appendChild(createFeatureElement(offerObj.offer.features[i]));
+  }
+
+  return newDialogPanel;
 };
 
+var changeDialogContent = function (inputObj) {
+  var newDialogPanel = createNewDialogPanel(inputObj);
+  panelTitle.querySelector('img').src = inputObj.author.avatar;
+  dialogPanelParent.replaceChild(newDialogPanel, oldDialogPanel);
+};
 
+changeDialogContent(ads[0]);
