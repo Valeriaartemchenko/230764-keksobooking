@@ -49,7 +49,6 @@ var defineAdvertObject = function () {
     },
     'offer': {
       'title': headingsRange[i],
-      'address': 'location.x, location.y',
       'price': getValueFromRange(MIN_PRICE, MAX_PRICE),
       'type': TYPES[getValueFromRange(0, TYPES.length)],
       'rooms': getValueFromRange(1, 5),
@@ -65,6 +64,7 @@ var defineAdvertObject = function () {
       'y': getValueFromRange(100, 500)
     }
   };
+  advertObject.offer.address = advertObject.location.x + ', ' + advertObject.location.y;
   return advertObject;
 };
 
@@ -82,8 +82,8 @@ var generatePointer = function (advertObject) {
   return pointer;
 };
 
+var ads = [];
 for (var i = 0; i < NUMBER_OF_ADS; i++) {
-  var ads = [];
   ads[i] = defineAdvertObject();
   pointsFragment.appendChild(generatePointer(ads[i]));
 }
@@ -99,20 +99,20 @@ var createFeatureElement = function (feature) {
 
 var createNewDialogPanel = function (offerObj) {
   var dialogOffer = lodgeTemplate.cloneNode(true);
-  var newDialogPanel = dialogOffer.querySelector('.lodge__panel');
+  var newDialogPanel = dialogOffer.querySelector('.dialog__panel');
   var dialogTitle = dialogOffer.querySelector('.lodge__title');
   var dialogAddress = dialogOffer.querySelector('.lodge__address');
   var dialogPrice = dialogOffer.querySelector('.lodge__price');
   var dialogType = dialogOffer.querySelector('.lodge__type');
-  var dialogRoomGuests = dialogOffer.querySelector('.longe__rooms-and-guests');
+  var dialogRoomGuests = dialogOffer.querySelector('.lodge__rooms-and-guests');
   var dialogCheckinTime = dialogOffer.querySelector('.lodge__checkin-time');
   var dialogFeatures = dialogOffer.querySelector('.lodge__features');
   var dialogDecription = dialogOffer.querySelector('.lodge__description');
   dialogTitle.textContent = offerObj.offer.title;
   dialogAddress.textContent = offerObj.offer.address;
-  dialogPrice.textContent = offerObj.offer.price + '&#x20bd;/ночь';
-  dialogRoomGuests.textContent = 'Для' + offerObj.offer.guests + 'гостей в' + offerObj.offer.rooms + 'комнатах';
-  dialogCheckinTime.textContent = 'Заезд после' + offerObj.offer.checkin + ', выезд до' + offerObj.offer.checkout;
+  dialogPrice.textContent = offerObj.offer.price + ' &#x20bd;/ночь';
+  dialogRoomGuests.textContent = 'Для ' + offerObj.offer.guests + ' гостей в ' + offerObj.offer.rooms + ' комнатах';
+  dialogCheckinTime.textContent = 'Заезд после ' + offerObj.offer.checkin + ' , выезд до ' + offerObj.offer.checkout;
   dialogDecription.textContent = offerObj.offer.description;
 
   switch (offerObj.offer.type) {
