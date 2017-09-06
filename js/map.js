@@ -14,9 +14,14 @@ var lodgeTemplate = document.querySelector('#lodge-template').content;
 var panelTitle = document.querySelector('.dialog__title');
 var oldDialogPanel = document.querySelector('.dialog__panel');
 var dialogPanelParent = oldDialogPanel.parentNode;
+var offerDialog = document.querySelector('.dialog');
+var closeDialog = document.querySelector('.dialog__close');
 
 var MIN_PRICE = 1000;
 var MAX_PRICE = 1000000;
+
+var ENTER_KEYCODE = 13;
+var ESC_KEYCODE = 27;
 
 var shuffleArray = function (array) {
   for (var i = array.length - 1; i > 0; i--) {
@@ -138,3 +143,67 @@ var changeDialogContent = function (inputObj) {
 };
 
 changeDialogContent(ads[0]);
+
+// Обработка событий
+
+var tokyo = document.querySelector('.tokyo');
+var pin = document.querySelectorAll('.pin');
+
+var getActivePin = function () {
+  for (var j = 0; j < pin.length; j++) {
+    if (pin[j].classList.contains('.pin--active')) {
+      pin[j].classList.remove('.pin--active');
+    }
+  }
+};
+
+var renderCurrentPin = function (target) {
+  getActivePin();
+  target.parentNode.classList.add('.pin--active');
+  openPopUp();
+};
+
+tokyo.addEventListener('click', function (event) {
+  var target = event.target;
+  if (target.parentNode.classList.contains('.pin')) {
+    renderCurrentPin(target);
+  }
+});
+
+tokyo.addEventListener('keydown', function (event) {
+  var target = event.target;
+  if (target.parentNode.classList.contains('.pin') && event.keyCode === ENTER_KEYCODE) {
+    renderCurrentPin(target);
+  }
+});
+
+var onPopUpPressEsc = function (event) {
+  if (event.keyCode === ESC_KEYCODE) {
+    closePopUp();
+    getActivePin();
+  }
+};
+
+var openPopUp = function () {
+  offerDialog.classList.remove('.hidden');
+  document.addEventListener('keydown', onPopUpPressEsc);
+};
+
+var closePopUp = function () {
+  offerDialog.classList.add('.hidden');
+  document.removeEventListener('keydown', onPopUpPressEsc);
+};
+
+closeDialog.addEventListener('click', function () {
+  closePopUp();
+  getActivePin();
+});
+
+closeDialog.addEventListener('keydown', function (event) {
+  if (event.keyCode === ENTER_KEYCODE) {
+    closePopUp();
+    getActivePin();
+  }
+});
+
+
