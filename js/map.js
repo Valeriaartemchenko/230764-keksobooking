@@ -15,11 +15,15 @@ var panelTitle = document.querySelector('.dialog__title');
 var oldDialogPanel = document.querySelector('.dialog__panel');
 var dialogPanelParent = oldDialogPanel.parentNode;
 var offerDialog = document.querySelector('.dialog');
-var closeDialog = document.querySelector('.dialog__close');
+var closeDialogBtn = document.querySelector('.dialog__close');
+var ads = [];
 
 var MIN_PRICE = 1000;
 var MAX_PRICE = 1000000;
 
+var tokyo = document.querySelector('.tokyo');
+var pin = document.querySelectorAll('.pin');
+var activePin = document.getElementsByClassName('.pin--active');
 var ENTER_KEYCODE = 13;
 var ESC_KEYCODE = 27;
 
@@ -78,6 +82,8 @@ var generatePointer = function (advertObject) {
   pointer.classList.add('pin');
   pointer.style.left = (advertObject.location.x + 0.5 * POINTER_WIDTH) + 'px';
   pointer.style.top = (advertObject.location.y + POINTER_HEIGHT) + 'px';
+  pointer.tabIndex = '0';
+  // pointer.dataset.searchIhdex = i;
   var pointerImage = document.createElement('img');
   pointerImage.src = advertObject.author.avatar;
   pointerImage.classList.add('rounded');
@@ -87,7 +93,6 @@ var generatePointer = function (advertObject) {
   return pointer;
 };
 
-var ads = [];
 for (var i = 0; i < NUMBER_OF_ADS; i++) {
   ads[i] = defineAdvertObject();
   pointsFragment.appendChild(generatePointer(ads[i]));
@@ -115,7 +120,7 @@ var createNewDialogPanel = function (offerObj) {
   var dialogDecription = dialogOffer.querySelector('.lodge__description');
   dialogTitle.textContent = offerObj.offer.title;
   dialogAddress.textContent = offerObj.offer.address;
-  dialogPrice.innerHTML = offerObj.offer.price + ' &#x20bd;/ночь';
+  dialogPrice.textContent = offerObj.offer.price + ' &#x20bd;/ночь';
   dialogRoomGuests.textContent = 'Для ' + offerObj.offer.guests + ' гостей в ' + offerObj.offer.rooms + ' комнатах';
   dialogCheckinTime.textContent = 'Заезд после ' + offerObj.offer.checkin + ' , выезд до ' + offerObj.offer.checkout;
   dialogDecription.textContent = offerObj.offer.description;
@@ -146,33 +151,32 @@ changeDialogContent(ads[0]);
 
 // Обработка событий
 
-var tokyo = document.querySelector('.tokyo');
-var pin = document.querySelectorAll('.pin');
-
+/*
 var getActivePin = function () {
   for (var j = 0; j < pin.length; j++) {
-    if (pin[j].classList.contains('.pin--active')) {
-      pin[j].classList.remove('.pin--active');
+    if (pin[j].classList.contains('pin--active')) {
+      pin[j].classList.remove('pin--active');
     }
   }
 };
+*/
 
 var renderCurrentPin = function (target) {
   getActivePin();
-  target.parentNode.classList.add('.pin--active');
+  target.parentNode.classList.add('pin--active');
   openPopUp();
 };
 
 tokyo.addEventListener('click', function (event) {
   var target = event.target;
-  if (target.parentNode.classList.contains('.pin')) {
+  if (target.parentNode.classList.contains('pin')) {
     renderCurrentPin(target);
   }
 });
 
 tokyo.addEventListener('keydown', function (event) {
   var target = event.target;
-  if (target.parentNode.classList.contains('.pin') && event.keyCode === ENTER_KEYCODE) {
+  if (target.parentNode.classList.contains('pin') && event.keyCode === ENTER_KEYCODE) {
     renderCurrentPin(target);
   }
 });
@@ -185,25 +189,23 @@ var onPopUpPressEsc = function (event) {
 };
 
 var openPopUp = function () {
-  offerDialog.classList.remove('.hidden');
+  offerDialog.classList.remove('hidden');
   document.addEventListener('keydown', onPopUpPressEsc);
 };
 
 var closePopUp = function () {
-  offerDialog.classList.add('.hidden');
+  offerDialog.classList.add('hidden');
   document.removeEventListener('keydown', onPopUpPressEsc);
 };
 
-closeDialog.addEventListener('click', function () {
+closeDialogBtn.addEventListener('click', function () {
   closePopUp();
   getActivePin();
 });
 
-closeDialog.addEventListener('keydown', function (event) {
+closeDialogBtn.addEventListener('keydown', function (event) {
   if (event.keyCode === ENTER_KEYCODE) {
     closePopUp();
     getActivePin();
   }
 });
-
-
