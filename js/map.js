@@ -22,7 +22,7 @@ var MIN_PRICE = 1000;
 var MAX_PRICE = 1000000;
 
 var tokyo = document.querySelector('.tokyo');
-// var pin = document.querySelectorAll('.pin');
+var pin = document.querySelectorAll('.pin');
 var ENTER_KEYCODE = 13;
 var ESC_KEYCODE = 27;
 
@@ -94,7 +94,9 @@ var generatePointer = function (advertObject) {
 
 for (var i = 0; i < NUMBER_OF_ADS; i++) {
   ads[i] = defineAdvertObject();
-  pointsFragment.appendChild(generatePointer(ads[i]));
+  pin = generatePointer(ads[i]);
+  pin.setAttribute('data-index', i);
+  pointsFragment.appendChild(pin);
 }
 
 TokyoPinMap.appendChild(pointsFragment);
@@ -143,34 +145,30 @@ var createNewDialogPanel = function (offerObj) {
 var changeDialogContent = function (inputObj) {
   var newDialogPanel = createNewDialogPanel(inputObj);
   panelTitle.querySelector('img').src = inputObj.author.avatar;
-  dialogPanelParent.replaceChild(newDialogPanel, oldDialogPanel);
+  oldDialogPanel.remove();
+  dialogPanelParent.appendChild(newDialogPanel);
+  oldDialogPanel = newDialogPanel;
 };
 
 changeDialogContent(ads[0]);
 
 // Обработка событий
 
-/*
-var getActivePin = function () {
-  for (var j = 0; j < pin.length; j++) {
-    if (pin[j].classList.contains('pin--active')) {
-      pin[j].classList.remove('pin--active');
-    }
-  }
-};
-*/
-
 var getActivePin = function () {
   var activePin = document.querySelector('.pin--active');
   if (activePin) {
     activePin.classList.remove('pin--active');
+    return activePin.getAttribute('data-index');
   }
+  return -1;
 };
 
 var renderCurrentPin = function (target) {
   getActivePin();
   target.parentNode.classList.add('pin--active');
-  openPopUp();
+
+  var index = target.parentNode.getAttribute('data-index');
+  openPopUp(index);
 };
 
 tokyo.addEventListener('click', function (event) {
@@ -194,9 +192,10 @@ var onPopUpPressEsc = function (event) {
   }
 };
 
-var openPopUp = function () {
+var openPopUp = function (index) {
   offerDialog.classList.remove('hidden');
   document.addEventListener('keydown', onPopUpPressEsc);
+  changeDialogContent(ads[index]);
 };
 
 var closePopUp = function () {
@@ -204,18 +203,16 @@ var closePopUp = function () {
   document.removeEventListener('keydown', onPopUpPressEsc);
 };
 
-var closeDialog = function () {
-  closeDialogBtn.addEventListener('click', function () {
+closeDialogBtn.addEventListener('click', function () {
+  closePopUp();
+  getActivePin();
+});
+
+closeDialogBtn.addEventListener('keydown', function (event) {
+  if (event.keyCode === ENTER_KEYCODE) {
     closePopUp();
     getActivePin();
-  });
-  closeDialogBtn.addEventListener('keydown', function (event) {
-    if (event.keyCode === ENTER_KEYCODE) {
-      closePopUp();
-      getActivePin();
-    }
-  });
-};
+  }
+});
 
-closeDialog();
-
+dialogPanelParent.appendChild(newDialogPanel);
