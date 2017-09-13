@@ -22,8 +22,7 @@ var MIN_PRICE = 1000;
 var MAX_PRICE = 1000000;
 
 var tokyo = document.querySelector('.tokyo');
-var pin = document.querySelectorAll('.pin');
-var activePin = document.getElementsByClassName('.pin--active');
+// var pin = document.querySelectorAll('.pin');
 var ENTER_KEYCODE = 13;
 var ESC_KEYCODE = 27;
 
@@ -161,6 +160,13 @@ var getActivePin = function () {
 };
 */
 
+var getActivePin = function () {
+  var activePin = document.querySelector('.pin--active');
+  if (activePin) {
+    activePin.classList.remove('pin--active');
+  }
+};
+
 var renderCurrentPin = function (target) {
   getActivePin();
   target.parentNode.classList.add('pin--active');
@@ -198,14 +204,18 @@ var closePopUp = function () {
   document.removeEventListener('keydown', onPopUpPressEsc);
 };
 
-closeDialogBtn.addEventListener('click', function () {
-  closePopUp();
-  getActivePin();
-});
-
-closeDialogBtn.addEventListener('keydown', function (event) {
-  if (event.keyCode === ENTER_KEYCODE) {
+var closeDialog = function () {
+  closeDialogBtn.addEventListener('click', function () {
     closePopUp();
     getActivePin();
-  }
-});
+  });
+  closeDialogBtn.addEventListener('keydown', function (event) {
+    if (event.keyCode === ENTER_KEYCODE) {
+      closePopUp();
+      getActivePin();
+    }
+  });
+};
+
+closeDialog();
+
